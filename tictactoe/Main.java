@@ -4,7 +4,7 @@ import java.util.Scanner;
 public class Main {
     static Scanner sc = new Scanner(System.in);
     public static void main(String[] args) {
-
+    	
         String jogador1;
         String jogador2;
         int opcaoEscolhida;
@@ -19,31 +19,20 @@ public class Main {
         System.out.println("-----------------------------------------");
 
         //Iniciando a matriz
-        int[][] tabuleiro = new int[3][3];
+        char[][] tabuleiro = new char[3][3];
         int contador = 1;
         for (int i = 0; i < tabuleiro.length; i++) {
             for (int j = 0; j < tabuleiro[i].length; j++) {
-                tabuleiro[i][j] = contador;
+                tabuleiro[i][j] = (char) (contador+'0');
                 contador += 1;
             }
         }
+
         //Chamar o tabuleiro
         mostrarTabuleiro(tabuleiro);
+        
         //Iniciando partida e escolha das jogadas
-
-
-            //Escolha da posicao
-            System.out.println("Digite o número correspondente à posição que deseja jogar: ");
-            opcaoEscolhida = sc.nextInt();
-            sc.nextLine();
-
-            for (int i = 0; i < tabuleiro.length; i++) {
-                for (int j = 0; j < tabuleiro[i].length; j++) {
-                    if (tabuleiro[i][j] == opcaoEscolhida) {
-                        //tabuleiro[i][j] = "X";
-                    }
-                }
-            }
+        jogada(tabuleiro);
         }
 
     static void menu(){
@@ -63,7 +52,7 @@ public class Main {
         return sc.next();
 
     }
-    static void mostrarTabuleiro(int[][] tabuleiro){
+    static void mostrarTabuleiro(char[][] tabuleiro){
         for (int i = 0; i < tabuleiro.length; i++) {
             for (int j = 0; j < tabuleiro[i].length; j++) {
                 System.out.print(tabuleiro[i][j] + " ");
@@ -71,7 +60,60 @@ public class Main {
             System.out.println();
         }
     }
-
+    
+    static void jogada(char[][] tabuleiro) {
+    	int rodadas = 1;
+    	boolean temVencedor = false;
+    	char vez;
+    	
+    	while(rodadas<=9 && !temVencedor) {
+    		//Escolha da posicao
+            System.out.println("Digite o número correspondente à posição que deseja jogar: ");
+            char opcaoEscolhida = sc.next().charAt(0);
+            if(rodadas%2 == 0){
+            	vez = 'O';
+            }
+            else{
+            	vez = 'X';
+            }
+            
+            switch (opcaoEscolhida){
+                case '1':
+                    tabuleiro[0][0] = vez;
+                    break;
+                case '2':
+                    tabuleiro[0][1] = vez;
+                    break;
+                case '3':
+                    tabuleiro[0][2] = vez;
+                    break;
+                case '4':
+                    tabuleiro[1][0] = vez;
+                    break;
+                case '5':
+                    tabuleiro[1][1] = vez;
+                    break;
+                case '6':
+                    tabuleiro[1][2] = vez;
+                    break;
+                case '7':
+                    tabuleiro[2][0] = vez;
+                    break;
+                case '8':
+                    tabuleiro[2][1] = vez;
+                    break;
+                case '9':
+                    tabuleiro[2][2] = vez;
+                    break;
+            }
+            if(rodadas >= 5) {
+            	temVencedor = haVencedor(tabuleiro);
+            }
+            rodadas++;
+            mostrarTabuleiro(tabuleiro);
+    	}
+    }
+    	
     static boolean haVencedor(char[][] matrix){
         boolean aux = false;
 
