@@ -71,4 +71,28 @@ public class Main {
             System.out.println();
         }
     }
+
+    static boolean haVencedor(char[][] matrix){
+        boolean aux = false;
+
+        if(isEqual(matrix[0][0], matrix[0][1], matrix[0][2])){aux = true;}
+        else if(isEqual(matrix[1][0], matrix[1][1], matrix[1][2])){aux = true;}
+        else if(isEqual(matrix[2][0], matrix[2][1], matrix[2][2])){aux = true;}
+        else if(isEqual(matrix[0][0], matrix[1][0], matrix[2][0])){aux = true;}
+        else if(isEqual(matrix[0][1], matrix[1][1], matrix[2][1])){aux = true;}
+        else if(isEqual(matrix[0][2], matrix[1][2], matrix[2][2])){aux = true;}
+        else if(isEqual(matrix[0][0], matrix[1][1], matrix[2][2])){aux = true;}
+        else if(isEqual(matrix[0][2], matrix[1][1], matrix[2][0])){aux = true;}
+        else{aux = false;}
+
+        return aux;
+    }
+
+    static boolean isEqual(char posicao1, char posicao2, char posicao3){
+        boolean result = false;
+        if(posicao1 == posicao2 && posicao2 == posicao3){
+            result = true;
+        }
+        return result;
+    }
 }
