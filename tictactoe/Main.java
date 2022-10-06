@@ -3,38 +3,46 @@ import java.util.Scanner;
 
 public class Main {
     static Scanner sc = new Scanner(System.in);
+    static int[] placar = {0, 0};
     public static void main(String[] args) {
-    	
-        String jogador1;
-        String jogador2;
-        int opcaoEscolhida;
 
+        String[] jogadores = new String[2];
+        boolean novaRodada = false;
+        char op;
         //Iniciando jogo e exibindo menu
         menu();
 
         //Entrada dos nomes dos jogadores
-        jogador1 = getNome("Jogador 1");
-        jogador2 = getNome("Jogador 2");
+        jogadores[0] = getNome("Jogador 1");
+        jogadores[1] = getNome("Jogador 2");
 
         System.out.println("-----------------------------------------");
 
         //Iniciando a matriz
-        char[][] tabuleiro = new char[3][3];
-        int contador = 1;
-        for (int i = 0; i < tabuleiro.length; i++) {
-            for (int j = 0; j < tabuleiro[i].length; j++) {
-                tabuleiro[i][j] = (char) (contador+'0');
-                contador += 1;
-            }
-        }
-
-        //Chamar o tabuleiro
-        mostrarTabuleiro(tabuleiro);
-        
+        char[][] tabuleiro = iniciandoTabuleiro();
         //Iniciando partida e escolha das jogadas
-        jogada(tabuleiro);
-        }
+        do{
+            mostrarTabuleiro(tabuleiro);
+            jogada(tabuleiro, jogadores);
 
+            System.out.println("Jogar novamente: (s/n)");
+            
+            op = sc.next().charAt(0);
+            if (op == 's'){
+                tabuleiro = iniciandoTabuleiro();
+                novaRodada = true;
+            }else {
+                novaRodada = false;
+            }
+        }while (novaRodada);
+        System.out.println("Placar: " + placar[0] + " X " + placar[1]);
+
+
+    }
+
+    /**
+     * Funções
+     */
     static void menu(){
         System.out.println("\nIniciando o Jogo da Velha...\n");
         System.out.println("----- Boas vindas ao Jogo da Velha! -----\n");
@@ -47,9 +55,21 @@ public class Main {
     }
     static String getNome(String io){
         //TODO: tratar excessão.
-        System.out.println("-----------------------------------------");
-        System.out.printf("  Digite o nome do %s:            \n", io);
-        return sc.next();
+        boolean success = false;
+        String nome=null;
+
+        while (!success){
+            try {
+                System.out.println("-----------------------------------------");
+                System.out.printf("  Digite o nome do %s:            \n", io);
+                nome = sc.next();
+                nome = nome.toUpperCase();
+                success = true;
+            } catch (IllegalArgumentException e){
+                System.out.println("Nome inválido");
+            }
+        }
+        return nome;
 
     }
     static void mostrarTabuleiro(char[][] tabuleiro){
@@ -61,57 +81,117 @@ public class Main {
         }
     }
     
-    static void jogada(char[][] tabuleiro) {
+    static void jogada(char[][] tabuleiro, String[] jogadores) {
     	int rodadas = 1;
     	boolean temVencedor = false;
-    	char vez;
-    	
+    	boolean valido = false;
+
     	while(rodadas<=9 && !temVencedor) {
     		//Escolha da posicao
             System.out.println("Digite o número correspondente à posição que deseja jogar: ");
-            char opcaoEscolhida = sc.next().charAt(0);
-            if(rodadas%2 == 0){
-            	vez = 'O';
-            }
-            else{
-            	vez = 'X';
-            }
-            
-            switch (opcaoEscolhida){
-                case '1':
-                    tabuleiro[0][0] = vez;
-                    break;
-                case '2':
-                    tabuleiro[0][1] = vez;
-                    break;
-                case '3':
-                    tabuleiro[0][2] = vez;
-                    break;
-                case '4':
-                    tabuleiro[1][0] = vez;
-                    break;
-                case '5':
-                    tabuleiro[1][1] = vez;
-                    break;
-                case '6':
-                    tabuleiro[1][2] = vez;
-                    break;
-                case '7':
-                    tabuleiro[2][0] = vez;
-                    break;
-                case '8':
-                    tabuleiro[2][1] = vez;
-                    break;
-                case '9':
-                    tabuleiro[2][2] = vez;
-                    break;
-            }
-            if(rodadas >= 5) {
-            	temVencedor = haVencedor(tabuleiro);
+            do {
+                char opcaoEscolhida = getPosition();
+                valido = escolherPosicao(tabuleiro, opcaoEscolhida, rodadas);
+                if(valido == false){
+                    System.out.println("Posicao invalida, jogue novamente");
+                }
+            }while(!valido);
+
+
+
+            mostrarTabuleiro(tabuleiro);
+
+            if(rodadas >= 5 && haVencedor(tabuleiro)) {
+            	temVencedor = true;
+                placar[(rodadas+1)%2]++;
+                //TODO:retornar um vencedor?
+                System.out.println("O vencedor é: " + jogadores[(rodadas+1)%2]);
             }
             rodadas++;
-            mostrarTabuleiro(tabuleiro);
+
     	}
+    }
+    static char getPosition(){
+        String str = sc.next();
+
+        while (!isNumeric(str)){
+            System.out.println("Valor invalido. Entre com um numero inteiro de 1 a 9");
+            str = sc.next();
+        }
+        int valorInt = Integer.parseInt(str);
+
+        return (char)(valorInt + '0');
+    }
+    public static boolean isNumeric(String input){
+        return input.matches("\\d");
+    }
+
+    static boolean escolherPosicao(char[][] tabuleiro, int opcao, int rodadas){
+        char vez = rodadas%2 == 0? 'O':'X';
+        boolean valido = false;
+        //TODO: checar se opcaoEscolhida é valida
+
+        switch (opcao){
+            case '1':
+                if (tabuleiro[0][0] != 'X' && tabuleiro[0][0] != 'O'){
+                    tabuleiro[0][0] = vez;
+                    valido = true;
+                }
+                break;
+            case '2':
+                if (tabuleiro[0][1] != 'X' && tabuleiro[0][1] != 'O'){
+                    tabuleiro[0][1] = vez;
+                    valido = true;
+                }
+                break;
+            case '3':
+                if (tabuleiro[0][2] != 'X' && tabuleiro[0][2] != 'O'){
+                    tabuleiro[0][2] = vez;
+                    valido = true;
+                }
+                break;
+            case '4':
+                if (tabuleiro[1][0] != 'X' && tabuleiro[1][0] != 'O'){
+                    tabuleiro[1][0] = vez;
+                    valido = true;
+                }
+                break;
+            case '5':
+                if (tabuleiro[1][1] != 'X' && tabuleiro[1][1] != 'O'){
+                    tabuleiro[1][1] = vez;
+                    valido = true;
+                }
+                break;
+            case '6':
+                if (tabuleiro[1][2] != 'X' && tabuleiro[1][2] != 'O'){
+                    tabuleiro[1][2] = vez;
+                    valido = true;
+                }
+                break;
+            case '7':
+                if (tabuleiro[2][0] != 'X' && tabuleiro[2][0] != 'O'){
+                    tabuleiro[2][0] = vez;
+                    valido = true;
+                }
+                break;
+            case '8':
+                if (tabuleiro[2][1] != 'X' && tabuleiro[2][1] != 'O'){
+                    tabuleiro[2][1] = vez;
+                    valido = true;
+                }
+                break;
+            case '9':
+                if (tabuleiro[2][2] != 'X' && tabuleiro[2][2] != 'O'){
+                    tabuleiro[2][2] = vez;
+                    valido = true;
+                }
+                break;
+            default:
+                System.out.println("Opcao invalida");
+                break;
+        }
+
+        return  valido;
     }
     	
     static boolean haVencedor(char[][] matrix){
@@ -136,5 +216,17 @@ public class Main {
             result = true;
         }
         return result;
+    }
+    static char[][] iniciandoTabuleiro(){
+        //Iniciando a matriz
+        char[][] matrix = new char[3][3];
+        int contador = 1;
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[i].length; j++) {
+                matrix[i][j] = (char) (contador+'0');
+                contador += 1;
+            }
+        }
+        return matrix;
     }
 }
