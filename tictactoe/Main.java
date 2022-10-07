@@ -97,8 +97,6 @@ public class Main {
                 }
             }while(!valido);
 
-
-
             mostrarTabuleiro(tabuleiro);
 
             if(rodadas >= 5 && haVencedor(tabuleiro)) {
@@ -107,9 +105,13 @@ public class Main {
                 //TODO:retornar um vencedor?
                 System.out.println("O vencedor é: " + jogadores[(rodadas+1)%2]);
             }
+            else if(rodadas == 9){
+                System.out.println("Empate");
+            }
             rodadas++;
 
     	}
+
     }
     static char getPosition(){
         String str = sc.next();
