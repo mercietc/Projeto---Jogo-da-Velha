@@ -26,7 +26,7 @@ public class Main {
             jogada(tabuleiro, jogadores);
 
             System.out.println("Jogar novamente: (s/n)");
-            
+
             op = sc.next().charAt(0);
             if (op == 's'){
                 tabuleiro = iniciandoTabuleiro();
@@ -35,7 +35,7 @@ public class Main {
                 novaRodada = false;
             }
         }while (novaRodada);
-        System.out.println("Placar: " + placar[0] + " X " + placar[1]);
+        System.out.println("Placar: "+jogadores[0]+" ("+placar[0] +" X "+placar[1]+") "+jogadores[1]);
 
 
     }
@@ -80,14 +80,14 @@ public class Main {
             System.out.println();
         }
     }
-    
-    static void jogada(char[][] tabuleiro, String[] jogadores) {
-    	int rodadas = 1;
-    	boolean temVencedor = false;
-    	boolean valido = false;
 
-    	while(rodadas<=9 && !temVencedor) {
-    		//Escolha da posicao
+    static void jogada(char[][] tabuleiro, String[] jogadores) {
+        int rodadas = 1;
+        boolean temVencedor = false;
+        boolean valido = false;
+
+        while(rodadas<=9 && !temVencedor) {
+            //Escolha da posicao
             System.out.println("Digite o número correspondente à posição que deseja jogar: ");
             do {
                 char opcaoEscolhida = getPosition();
@@ -100,7 +100,7 @@ public class Main {
             mostrarTabuleiro(tabuleiro);
 
             if(rodadas >= 5 && haVencedor(tabuleiro)) {
-            	temVencedor = true;
+                temVencedor = true;
                 placar[(rodadas+1)%2]++;
                 //TODO:retornar um vencedor?
                 System.out.println("O vencedor é: " + jogadores[(rodadas+1)%2]);
@@ -110,7 +110,7 @@ public class Main {
             }
             rodadas++;
 
-    	}
+        }
 
     }
     static char getPosition(){
@@ -195,7 +195,7 @@ public class Main {
 
         return  valido;
     }
-    	
+
     static boolean haVencedor(char[][] matrix){
         boolean aux = false;
 
