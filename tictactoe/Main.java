@@ -54,7 +54,7 @@ public class Main {
         System.out.println("|____________________*__________________|");
     }
     static String getNome(String io){
-        //TODO: tratar excessão.
+        
         boolean success = false;
         String nome=null;
 
@@ -102,7 +102,6 @@ public class Main {
             if(rodadas >= 5 && haVencedor(tabuleiro)) {
                 temVencedor = true;
                 placar[(rodadas+1)%2]++;
-                //TODO:retornar um vencedor?
                 System.out.println("O vencedor é: " + jogadores[(rodadas+1)%2]);
             }
             else if(rodadas == 9){
@@ -131,7 +130,6 @@ public class Main {
     static boolean escolherPosicao(char[][] tabuleiro, int opcao, int rodadas){
         char vez = rodadas%2 == 0? 'O':'X';
         boolean valido = false;
-        //TODO: checar se opcaoEscolhida é valida
 
         switch (opcao){
             case '1':
